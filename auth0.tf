@@ -13,3 +13,15 @@ resource "auth0_resource_server" "kubernetes" {
     description = "Kubernetes Cluster Administrator"
   }
 }
+
+resource "auth0_action" "attach_roles" {
+  name    = "attach roles"
+  runtime = "node16"
+  deploy  = true
+  code    = file("./auth0_attach_roles_action.js")
+
+  supported_triggers {
+    id      = "post-login"
+    version = "v3"
+  }
+}

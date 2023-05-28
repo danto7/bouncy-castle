@@ -20,7 +20,7 @@ provider "auth0" {}
 provider "kubernetes" {}
 
 provider "helm" {
-  terraform {
+  kubernetes {
     insecure = true
   }
 }

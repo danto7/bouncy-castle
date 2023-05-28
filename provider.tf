@@ -23,11 +23,11 @@ variable "kubernetes_cluster_cert" {
 provider "auth0" {}
 
 provider "kubernetes" {
-  cluster_ca_certificate = var.kubernetes_cluster_cert
+  //cluster_ca_certificate = var.kubernetes_cluster_cert
 }
 
 provider "helm" {
   kubernetes {
-    cluster_ca_certificate = var.kubernetes_cluster_cert
+    //cluster_ca_certificate = var.kubernetes_cluster_cert
   }
 }

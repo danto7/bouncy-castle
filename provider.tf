@@ -15,12 +15,19 @@ terraform {
   }
 }
 
+variable "kubernetes_cluster_cert" {
+  type        = string
+  description = "cluster cert in pem format"
+}
+
 provider "auth0" {}
 
-provider "kubernetes" {}
+provider "kubernetes" {
+  cluster_ca_certificate = var.kubernetes_cluster_cert
+}
 
 provider "helm" {
   kubernetes {
-    insecure = true
+    cluster_ca_certificate = var.kubernetes_cluster_cert
   }
 }

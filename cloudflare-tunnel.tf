@@ -1,5 +1,5 @@
 data "cloudflare_accounts" "d-jensen_de" {
-  name = "daniel+cloudflare@d-jensen.de"
+  name = "Daniel+cloudflare@d-jensen.de's Account"
 }
 
 resource "random_password" "tunnel_secret" {

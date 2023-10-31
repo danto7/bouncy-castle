@@ -64,9 +64,9 @@ resource "kubernetes_deployment" "tunnel" {
 
       spec {
         container {
-          name    = "tunnel"
-          image   = "cloudflare/cloudflared:latest"
-          command = ["tunnel", "--no-autoupdate", "run"]
+          name  = "tunnel"
+          image = "cloudflare/cloudflared:latest"
+          args  = ["tunnel", "--no-autoupdate", "run"]
 
           env_from {
             secret_ref {

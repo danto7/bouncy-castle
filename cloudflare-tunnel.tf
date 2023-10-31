@@ -13,6 +13,21 @@ resource "cloudflare_tunnel" "olymp" {
   config_src = "cloudflare"
 }
 
+resource "cloudflare_tunnel_config" "example_config" {
+  account_id = data.cloudflare_accounts.d-jensen_de.accounts[0].id
+  tunnel_id  = cloudflare_tunnel.olymp.id
+
+  config {
+    ingress_rule {
+      hostname = "paperless.d-jensen.de"
+      service  = module.paperless.endpoint
+    }
+    ingress_rule {
+      service = "http_status:404"
+    }
+  }
+}
+
 resource "kubernetes_namespace" "tunnel" {
   metadata {
     name = "cloudflare-tunnel"

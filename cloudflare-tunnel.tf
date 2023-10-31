@@ -36,13 +36,18 @@ resource "kubernetes_config_map" "tunnel" {
   }
 
   data = {
-    tunnel = cloudflare_tunnel.olymp.id
-    ingress = [
-      {
-        hostname = "paperless.d-jensen.de"
-        service  = module.paperless.endpoint
-      }
-    ]
+    "config.yml" = yamlencode({
+      tunnel = cloudflare_tunnel.olymp.id
+      ingress = [
+        {
+          hostname = "paperless.d-jensen.de"
+          service  = module.paperless.endpoint
+        },
+        {
+          service = "http_status:404"
+        },
+      ]
+    })
   }
 }
 
@@ -72,7 +77,14 @@ resource "kubernetes_deployment" "tunnel" {
         container {
           name  = "tunnel"
           image = "cloudflare/cloudflared:latest"
-          args  = ["tunnel", "--no-autoupdate", "--config", "/tunnel.conf", "run"]
+          args = [
+            "tunnel",
+            "--no-autoupdate",
+            "--config",
+            "/config.yml",
+            "run",
+            cloudflare_tunnel.olymp.id
+          ]
 
           env_from {
             secret_ref {
@@ -82,7 +94,8 @@ resource "kubernetes_deployment" "tunnel" {
 
           volume_mount {
             name       = "tunnel-config"
-            mount_path = "/tunnel.conf"
+            mount_path = "/config.yml"
+            sub_path   = "config.yml"
           }
         }
         volume {
@@ -92,8 +105,6 @@ resource "kubernetes_deployment" "tunnel" {
             name = kubernetes_config_map.tunnel.metadata[0].name
           }
         }
-
-        restart_policy = "Always"
       }
     }
   }

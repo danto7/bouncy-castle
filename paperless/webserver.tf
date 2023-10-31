@@ -12,12 +12,16 @@ resource "kubernetes_service" "webserver" {
 
   spec {
     port {
-      port        = 8000
+      port        = 80
       target_port = "8000"
     }
 
     selector = local.webserver_labels
   }
+}
+
+output "endpoint" {
+  value = "http://${kubernetes_service.webserver.metadata[0].name}.${var.namespace}.svc.cluster.local"
 }
 
 resource "kubernetes_deployment" "webserver" {

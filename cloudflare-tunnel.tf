@@ -37,6 +37,12 @@ resource "kubernetes_config_map" "tunnel" {
 
   data = {
     tunnel = cloudflare_tunnel.olymp.id
+    ingress = [
+      {
+        hostname = "paperless.d-jensen.de"
+        service  = module.paperless.endpoint
+      }
+    ]
   }
 }
 

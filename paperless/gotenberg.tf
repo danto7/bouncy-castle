@@ -13,7 +13,6 @@ resource "kubernetes_service" "gotenburg" {
 
   spec {
     port {
-      name        = "http"
       port        = 9998
       target_port = "9998"
     }

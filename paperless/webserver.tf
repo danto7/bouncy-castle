@@ -101,6 +101,11 @@ resource "kubernetes_deployment" "webserver" {
             value = "http://$(GOTENBERG_SERVICE_HOST):$(GOTENBERG_SERVICE_PORT)"
           }
 
+          env {
+            name  = "PAPERLESS_AUTO_LOGIN_USERNAME"
+            value = "daniel"
+          }
+
           volume_mount {
             name       = "data"
             mount_path = "/usr/src/paperless/data"

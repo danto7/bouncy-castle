@@ -10,6 +10,7 @@ resource "cloudflare_tunnel" "olymp" {
   account_id = data.cloudflare_accounts.d-jensen_de.accounts[0].id
   name       = "olymp"
   secret     = base64encode(random_password.tunnel_secret.result)
+  config_src = "cloudflare"
 }
 
 resource "kubernetes_namespace" "tunnel" {
@@ -26,28 +27,6 @@ resource "kubernetes_secret" "tunnel" {
 
   data = {
     TUNNEL_TOKEN = cloudflare_tunnel.olymp.tunnel_token
-  }
-}
-
-resource "kubernetes_config_map" "tunnel" {
-  metadata {
-    name      = "tunnel"
-    namespace = kubernetes_namespace.tunnel.metadata[0].name
-  }
-
-  data = {
-    "config.yml" = yamlencode({
-      tunnel = cloudflare_tunnel.olymp.id
-      ingress = [
-        {
-          hostname = "paperless.d-jensen.de"
-          service  = module.paperless.endpoint
-        },
-        {
-          service = "http_status:404"
-        },
-      ]
-    })
   }
 }
 
@@ -80,29 +59,13 @@ resource "kubernetes_deployment" "tunnel" {
           args = [
             "tunnel",
             "--no-autoupdate",
-            "--config",
-            "/config.yml",
             "run",
-            cloudflare_tunnel.olymp.id
           ]
 
           env_from {
             secret_ref {
               name = kubernetes_secret.tunnel.metadata[0].name
             }
-          }
-
-          volume_mount {
-            name       = "tunnel-config"
-            mount_path = "/config.yml"
-            sub_path   = "config.yml"
-          }
-        }
-        volume {
-          name = "tunnel-config"
-
-          config_map {
-            name = kubernetes_config_map.tunnel.metadata[0].name
           }
         }
       }

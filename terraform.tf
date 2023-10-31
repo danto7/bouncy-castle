@@ -1,4 +1,12 @@
 terraform {
+  cloud {
+    organization = "d-jensen"
+
+    workspaces {
+      name = "olymp"
+    }
+  }
+
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"

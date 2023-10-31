@@ -74,7 +74,7 @@ resource "kubernetes_persistent_volume_claim" "redisdata" {
   }
 }
 
-/*
+
 locals {
   gotenberg_labels = {
     name = "gotenberg"
@@ -82,7 +82,7 @@ locals {
 }
 resource "kubernetes_deployment" "gotenberg" {
   metadata {
-    labels    = local.gotenberg_labels
+    name      = local.gotenberg_labels.name
     namespace = kubernetes_namespace.paperless.metadata[0].name
   }
 
@@ -118,7 +118,7 @@ locals {
 }
 resource "kubernetes_deployment" "tika" {
   metadata {
-    labels    = local.tika_labels
+    name      = local.tika_labels.name
     namespace = kubernetes_namespace.paperless.metadata[0].name
   }
 
@@ -154,7 +154,7 @@ locals {
 
 resource "kubernetes_service" "webserver" {
   metadata {
-    labels    = local.webserver_labels
+    name      = local.webserver_labels.name
     namespace = kubernetes_namespace.paperless.metadata[0].name
   }
 
@@ -171,7 +171,7 @@ resource "kubernetes_service" "webserver" {
 
 resource "kubernetes_deployment" "webserver" {
   metadata {
-    labels    = local.webserver_labels
+    name      = local.webserver_labels.name
     namespace = kubernetes_namespace.paperless.metadata[0].name
   }
 
@@ -358,4 +358,3 @@ resource "kubernetes_persistent_volume_claim" "consume" {
     }
   }
 }
-*/

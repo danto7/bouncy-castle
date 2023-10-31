@@ -4,6 +4,22 @@ locals {
   }
 }
 
+resource "kubernetes_service" "broker" {
+  metadata {
+    name      = local.broker_labels.name
+    namespace = var.namespace
+  }
+
+  spec {
+    port {
+      port        = 6379
+      target_port = "6379"
+    }
+
+    selector = local.broker_labels
+  }
+}
+
 resource "kubernetes_deployment" "broker" {
   metadata {
     name      = local.broker_labels.name

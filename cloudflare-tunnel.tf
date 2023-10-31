@@ -72,7 +72,7 @@ resource "kubernetes_deployment" "tunnel" {
         container {
           name  = "tunnel"
           image = "cloudflare/cloudflared:latest"
-          args  = ["tunnel", "--no-autoupdate", "run"]
+          args  = ["tunnel", "--no-autoupdate", "--config", "/tunnel.conf", "run"]
 
           env_from {
             secret_ref {
@@ -80,10 +80,16 @@ resource "kubernetes_deployment" "tunnel" {
             }
           }
 
-          env_from {
-            config_map_ref {
-              name = kubernetes_config_map.tunnel.metadata[0].name
-            }
+          volume_mount {
+            name       = "tunnel-config"
+            mount_path = "/tunnel.conf"
+          }
+        }
+        volume {
+          name = "tunnel-config"
+
+          config_map {
+            name = kubernetes_config_map.tunnel.metadata[0].name
           }
         }
 

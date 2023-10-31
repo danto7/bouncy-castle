@@ -2,15 +2,16 @@ data "cloudflare_accounts" "d-jensen_de" {
   name = "Daniel+cloudflare@d-jensen.de's Account"
 }
 
-resource "random_password" "tunnel_secret" {
-  length = 32
+data "cloudflare_zone" "d-jensen_de" {
+  name = "d-jensen.de"
 }
 
-resource "cloudflare_tunnel" "olymp" {
-  account_id = data.cloudflare_accounts.d-jensen_de.accounts[0].id
-  name       = "olymp"
-  secret     = base64encode(random_password.tunnel_secret.result)
-  config_src = "cloudflare"
+resource "cloudflare_record" "paperless" {
+  zone_id = data.cloudflare_zone.d-jensen_de.zone_id
+  name    = "paperless"
+  value   = cloudflare_tunnel.olymp.cname
+  type    = "CNAME"
+  proxied = true
 }
 
 resource "cloudflare_tunnel_config" "example_config" {
@@ -26,6 +27,17 @@ resource "cloudflare_tunnel_config" "example_config" {
       service = "http_status:404"
     }
   }
+}
+
+resource "random_password" "tunnel_secret" {
+  length = 32
+}
+
+resource "cloudflare_tunnel" "olymp" {
+  account_id = data.cloudflare_accounts.d-jensen_de.accounts[0].id
+  name       = "olymp"
+  secret     = base64encode(random_password.tunnel_secret.result)
+  config_src = "cloudflare"
 }
 
 resource "kubernetes_namespace" "tunnel" {

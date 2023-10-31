@@ -12,7 +12,6 @@ resource "kubernetes_service" "webserver" {
 
   spec {
     port {
-      name        = "http"
       port        = 8000
       target_port = "8000"
     }
@@ -84,7 +83,7 @@ resource "kubernetes_deployment" "webserver" {
 
           env {
             name  = "PAPERLESS_REDIS"
-            value = "redis://broker:6379"
+            value = "redis://$(BROKER_SERVICE_HOST):$(BROKER_SERVICE_PORT)"
           }
 
           env {
@@ -94,12 +93,12 @@ resource "kubernetes_deployment" "webserver" {
 
           env {
             name  = "PAPERLESS_TIKA_ENDPOINT"
-            value = "http://tika:9998"
+            value = "http://$(TIKA_SERVICE_HOST):$(TIKA_SERVICE_PORT)"
           }
 
           env {
             name  = "PAPERLESS_TIKA_GOTENBERG_ENDPOINT"
-            value = "http://gotenberg:3000"
+            value = "http://$(GOTENBERG_SERVICE_HOST):$(GOTENBERG_SERVICE_PORT)"
           }
 
           volume_mount {

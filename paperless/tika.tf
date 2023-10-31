@@ -3,6 +3,23 @@ locals {
     name = "tika"
   }
 }
+
+resource "kubernetes_service" "tika" {
+  metadata {
+    name      = local.tika_labels.name
+    namespace = var.namespace
+  }
+
+  spec {
+    port {
+      port        = 9998
+      target_port = "9998"
+    }
+
+    selector = local.tika_labels
+  }
+}
+
 resource "kubernetes_deployment" "tika" {
   metadata {
     name      = local.tika_labels.name

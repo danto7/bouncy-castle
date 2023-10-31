@@ -4,6 +4,24 @@ locals {
     name = "gotenberg"
   }
 }
+
+resource "kubernetes_service" "gotenburg" {
+  metadata {
+    name      = local.gotenberg_labels.name
+    namespace = var.namespace
+  }
+
+  spec {
+    port {
+      name        = "http"
+      port        = 9998
+      target_port = "9998"
+    }
+
+    selector = local.gotenberg_labels
+  }
+}
+
 resource "kubernetes_deployment" "gotenberg" {
   metadata {
     name      = local.gotenberg_labels.name

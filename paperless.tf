@@ -12,7 +12,7 @@ locals {
 
 resource "kubernetes_deployment" "broker" {
   metadata {
-    labels    = local.broker_labels
+    name      = local.broker_labels.name
     namespace = kubernetes_namespace.paperless.metadata[0].name
   }
 

@@ -9,3 +9,4 @@ module "paperless" {
 
   namespace = kubernetes_namespace.paperless.metadata[0].name
 }
+

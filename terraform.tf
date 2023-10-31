@@ -16,15 +16,30 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.9.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "4.17.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.5.1"
+    }
   }
 }
 
+provider "random" {
+}
+
 provider "kubernetes" {
-  //cluster_ca_certificate = var.kubernetes_cluster_cert
+  ignore_labels = [
+    "recurring-job-group.longhorn.io/default"
+  ]
 }
 
 provider "helm" {
   kubernetes {
-    //cluster_ca_certificate = var.kubernetes_cluster_cert
   }
+}
+
+provider "cloudflare" {
 }

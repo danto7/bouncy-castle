@@ -7,7 +7,7 @@ locals {
 resource "kubernetes_deployment" "gotenberg" {
   metadata {
     name      = local.gotenberg_labels.name
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {

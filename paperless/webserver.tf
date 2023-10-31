@@ -7,7 +7,7 @@ locals {
 resource "kubernetes_service" "webserver" {
   metadata {
     name      = local.webserver_labels.name
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -24,7 +24,7 @@ resource "kubernetes_service" "webserver" {
 resource "kubernetes_deployment" "webserver" {
   metadata {
     name      = local.webserver_labels.name
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -146,7 +146,7 @@ resource "kubernetes_deployment" "webserver" {
 resource "kubernetes_persistent_volume_claim" "data" {
   metadata {
     name      = "data"
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -163,7 +163,7 @@ resource "kubernetes_persistent_volume_claim" "data" {
 resource "kubernetes_persistent_volume_claim" "media" {
   metadata {
     name      = "media"
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -180,7 +180,7 @@ resource "kubernetes_persistent_volume_claim" "media" {
 resource "kubernetes_persistent_volume_claim" "export" {
   metadata {
     name      = "export"
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -197,7 +197,7 @@ resource "kubernetes_persistent_volume_claim" "export" {
 resource "kubernetes_persistent_volume_claim" "consume" {
   metadata {
     name      = "consume"
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {

@@ -6,7 +6,7 @@ locals {
 resource "kubernetes_deployment" "tika" {
   metadata {
     name      = local.tika_labels.name
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {

@@ -7,7 +7,7 @@ locals {
 resource "kubernetes_deployment" "broker" {
   metadata {
     name      = local.broker_labels.name
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {
@@ -54,7 +54,7 @@ resource "kubernetes_deployment" "broker" {
 resource "kubernetes_persistent_volume_claim" "redisdata" {
   metadata {
     name      = "redisdata"
-    namespace = kubernetes_namespace.paperless.metadata[0].name
+    namespace = var.namespace
   }
 
   spec {

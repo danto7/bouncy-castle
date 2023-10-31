@@ -1,7 +1,9 @@
 terraform {
   cloud {
+    organization = "d-jensen"
+
     workspaces {
-      tags = ["prod"]
+      name = "olymp"
     }
   }
 }

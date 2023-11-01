@@ -14,6 +14,14 @@ resource "cloudflare_record" "paperless" {
   proxied = true
 }
 
+resource "cloudflare_record" "kubernetes_wildcard" {
+  zone_id = data.cloudflare_zone.d-jensen_de.zone_id
+  name    = "*.k"
+  value   = cloudflare_tunnel.olymp.cname
+  type    = "CNAME"
+  proxied = true
+}
+
 resource "cloudflare_tunnel_config" "example_config" {
   account_id = data.cloudflare_accounts.d-jensen_de.accounts[0].id
   tunnel_id  = cloudflare_tunnel.olymp.id
@@ -22,6 +30,33 @@ resource "cloudflare_tunnel_config" "example_config" {
     ingress_rule {
       hostname = "paperless.d-jensen.de"
       service  = module.paperless.endpoint
+    }
+    ingress_rule {
+      hostname = "longhorn.k.d-jensen.de"
+      service  = "http://longhorn-frontend.longhorn-system.svc.cluster.local"
+      origin_request {
+        access {
+          required = true
+        }
+      }
+    }
+    ingress_rule {
+      hostname = "prometheus.k.d-jensen.de"
+      service  = "http://prometheus-server.monitoring-system.svc.cluster.local"
+      origin_request {
+        access {
+          required = true
+        }
+      }
+    }
+    ingress_rule {
+      hostname = "grafana.k.d-jensen.de"
+      service  = "http://grafana.grafana.svc.cluster.local:3000"
+      origin_request {
+        access {
+          required = true
+        }
+      }
     }
     ingress_rule {
       service = "http_status:404"

@@ -80,7 +80,7 @@ resource "kubernetes_deployment" "tunnel" {
         annotations = {
           "prometheus.io/scrape" = true
           "prometheus.io/port"   = 9000
-          "prometheus.io/path"   = "/"
+          "prometheus.io/path"   = "/metrics"
         }
       }
 
@@ -97,7 +97,6 @@ resource "kubernetes_deployment" "tunnel" {
           ]
 
           port {
-            host_port      = 9000
             container_port = 9000
           }
 

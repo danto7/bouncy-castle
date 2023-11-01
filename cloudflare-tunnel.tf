@@ -77,6 +77,11 @@ resource "kubernetes_deployment" "tunnel" {
         labels = {
           name = "cloudflare-tunnel"
         }
+        annotations = {
+          "prometheus.io/scrape" = true
+          "prometheus.io/port"   = 9000
+          "prometheus.io/path"   = "/"
+        }
       }
 
       spec {
@@ -86,8 +91,15 @@ resource "kubernetes_deployment" "tunnel" {
           args = [
             "tunnel",
             "--no-autoupdate",
+            "--metrics",
+            ":9000",
             "run",
           ]
+
+          port {
+            host_port      = 9000
+            container_port = 9000
+          }
 
           env_from {
             secret_ref {

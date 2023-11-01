@@ -68,6 +68,36 @@ resource "kubernetes_deployment" "grafana" {
             protocol       = "TCP"
           }
 
+          env {
+            name  = "GF_AUTH_ANONYMOUS_ENABLED"
+            value = "true"
+          }
+
+          env {
+            name  = "GF_AUTH_ANONYMOUS_ORG_NAME"
+            value = "Main Org."
+          }
+
+          env {
+            name  = "GF_AUTH_ANONYMOUS_ORG_ROLE"
+            value = "Admin"
+          }
+
+          env {
+            name  = "GF_AUTH_DISABLE_LOGIN_FORM"
+            value = "true"
+          }
+
+          env {
+            name  = "GF_AUTH_DISABLE_SIGNOUT_MENU"
+            value = "true"
+          }
+
+          env {
+            name  = "GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION"
+            value = "true"
+          }
+
           resources {
             requests = {
               cpu = "250m"

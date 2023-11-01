@@ -15,7 +15,7 @@ resource "kubernetes_persistent_volume_claim" "grafana" {
   }
 
   spec {
-    access_modes = ["ReadWriteOnce"]
+    access_modes = ["ReadWriteMany"]
 
     resources {
       requests = {

@@ -6,17 +6,11 @@ data "cloudflare_zone" "d-jensen_de" {
   name = "d-jensen.de"
 }
 
-resource "cloudflare_record" "paperless" {
-  zone_id = data.cloudflare_zone.d-jensen_de.zone_id
-  name    = "paperless"
-  value   = cloudflare_tunnel.olymp.cname
-  type    = "CNAME"
-  proxied = true
-}
+resource "cloudflare_record" "services" {
+  for_each = toset(["longhorn", "paperless", "prometheus", "grafana"])
 
-resource "cloudflare_record" "kubernetes_wildcard" {
   zone_id = data.cloudflare_zone.d-jensen_de.zone_id
-  name    = "*.k"
+  name    = each.key
   value   = cloudflare_tunnel.olymp.cname
   type    = "CNAME"
   proxied = true
@@ -32,7 +26,7 @@ resource "cloudflare_tunnel_config" "example_config" {
       service  = module.paperless.endpoint
     }
     ingress_rule {
-      hostname = "longhorn.k.d-jensen.de"
+      hostname = "longhorn.d-jensen.de"
       service  = "http://longhorn-frontend.longhorn-system.svc.cluster.local"
       origin_request {
         access {
@@ -41,7 +35,7 @@ resource "cloudflare_tunnel_config" "example_config" {
       }
     }
     ingress_rule {
-      hostname = "prometheus.k.d-jensen.de"
+      hostname = "prometheus.d-jensen.de"
       service  = "http://prometheus-server.monitoring-system.svc.cluster.local"
       origin_request {
         access {
@@ -50,7 +44,7 @@ resource "cloudflare_tunnel_config" "example_config" {
       }
     }
     ingress_rule {
-      hostname = "grafana.k.d-jensen.de"
+      hostname = "grafana.d-jensen.de"
       service  = "http://grafana.grafana.svc.cluster.local:3000"
       origin_request {
         access {

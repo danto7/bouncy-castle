@@ -28,29 +28,14 @@ resource "cloudflare_tunnel_config" "example_config" {
     ingress_rule {
       hostname = "longhorn.d-jensen.de"
       service  = "http://longhorn-frontend.longhorn-system.svc.cluster.local"
-      origin_request {
-        access {
-          required = true
-        }
-      }
     }
     ingress_rule {
       hostname = "prometheus.d-jensen.de"
       service  = "http://prometheus-server.monitoring-system.svc.cluster.local"
-      origin_request {
-        access {
-          required = true
-        }
-      }
     }
     ingress_rule {
       hostname = "grafana.d-jensen.de"
       service  = "http://grafana.grafana.svc.cluster.local:3000"
-      origin_request {
-        access {
-          required = true
-        }
-      }
     }
     ingress_rule {
       service = "http_status:404"

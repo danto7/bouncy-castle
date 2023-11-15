@@ -25,7 +25,9 @@ resource "helm_release" "longhorn" {
       defaultClassReplicaCount : 2
     }
     defaultSettings = {
-      backupTarget = "nfs://192.168.188.7:/mnt/ravenclaw/olymp-backup"
+      backupTarget                                = "nfs://192.168.188.7:/mnt/ravenclaw/olymp-backup"
+      allowVolumeCreationWithDegradedAvailability = false
+      replicaSoftAntiAffinity                     = false
     }
   })]
 }

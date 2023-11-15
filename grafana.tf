@@ -98,6 +98,11 @@ resource "kubernetes_deployment" "grafana" {
             value = "true"
           }
 
+          env {
+            name  = "GF_SERVER_ROOT_URL"
+            value = "https://grafana.d-jensen.de"
+          }
+
           resources {
             requests = {
               cpu = "250m"

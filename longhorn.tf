@@ -31,9 +31,9 @@ resource "helm_release" "longhorn" {
     }
     longhornManager = {
       serviceAnnotations = {
-        "prometheus.io/scrape" = true
+        "prometheus.io/scrape" = "true"
         "prometheus.io/path"   = "/metrics"
-        "prometheus.io/port"   = 9500
+        "prometheus.io/port"   = "9500"
       }
     }
   })]

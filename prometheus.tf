@@ -13,6 +13,8 @@ resource "helm_release" "prometheus" {
 
   values = [yamlencode({
     server = {
+      retention = "1y"
+
       persistentVolume = {
         size = "20Gi"
       }

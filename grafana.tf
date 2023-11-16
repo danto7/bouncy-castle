@@ -15,7 +15,7 @@ resource "kubernetes_persistent_volume_claim" "grafana" {
   }
 
   spec {
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
 
     resources {
       requests = {
@@ -36,6 +36,10 @@ resource "kubernetes_deployment" "grafana" {
   }
 
   spec {
+    strategy {
+      type = "Recreate"
+    }
+
     selector {
       match_labels = {
         app = "grafana"

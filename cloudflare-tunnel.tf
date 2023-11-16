@@ -31,7 +31,7 @@ resource "cloudflare_tunnel_config" "example_config" {
     }
     ingress_rule {
       hostname = "prometheus.d-jensen.de"
-      service  = "http://prometheus-server.monitoring-system.svc.cluster.local"
+      service  = "http://prometheus-server.prometheus.svc.cluster.local"
     }
     ingress_rule {
       hostname = "grafana.d-jensen.de"

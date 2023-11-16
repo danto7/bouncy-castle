@@ -1,5 +1,5 @@
 locals {
-  grafana_tag = "10.2.0"
+  grafana_tag = "10.2.1"
 }
 
 resource "kubernetes_namespace" "grafana" {

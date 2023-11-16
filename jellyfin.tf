@@ -19,6 +19,10 @@ module "jellyfin" {
       container_path = "/cache"
       size           = "2Gi"
     }
+    media = {
+      container_path = "/media"
+      size           = "100Gi"
+    }
   }
   ports = {
     http = {

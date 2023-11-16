@@ -127,6 +127,7 @@ resource "kubernetes_service" "app" {
     dynamic "port" {
       for_each = var.ports
       content {
+        name        = port.key
         port        = port.value.port
         protocol    = port.value.protocol
         target_port = port.key

@@ -20,4 +20,9 @@ module "jellyfin" {
       size           = "2Gi"
     }
   }
+  ports = {
+    http = {
+      port = 8096
+    }
+  }
 }

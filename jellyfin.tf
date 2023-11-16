@@ -9,7 +9,7 @@ module "jellyfin" {
 
   name      = "jellyfin"
   namespace = kubernetes_namespace.jellyfin.metadata[0].name
-  image     = "jellyfin/jellyfin:stable"
+  image     = "jellyfin/jellyfin:10.8.12"
   volumes = {
     config = {
       container_path = "/config"

@@ -1,5 +1,5 @@
 locals {
-  grafana_tag = "10.2.1"
+  grafana_image = "grafana/grafana@sha256:40aaa21a9f7602816b754eb293139c3173629b83829faf1f510e19f76e486e41"
 }
 
 resource "kubernetes_namespace" "grafana" {
@@ -64,7 +64,7 @@ resource "kubernetes_deployment" "grafana" {
 
         container {
           name  = "grafana"
-          image = "grafana/grafana:${local.grafana_tag}"
+          image = local.grafana_image
 
           port {
             name           = "http-grafana"

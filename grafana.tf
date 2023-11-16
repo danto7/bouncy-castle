@@ -107,11 +107,6 @@ resource "kubernetes_deployment" "grafana" {
             value = "https://grafana.d-jensen.de"
           }
 
-          env {
-            name  = "GF_DATABASE_WAL"
-            value = "true"
-          }
-
           resources {
             requests = {
               cpu = "250m"

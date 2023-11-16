@@ -106,7 +106,6 @@ resource "kubernetes_persistent_volume_claim" "app" {
 
   spec {
     access_modes = ["ReadWriteOnce"]
-    volume_name  = "${var.namespace}_${each.value.pvc_name}"
 
     resources {
       requests = {

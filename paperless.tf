@@ -7,6 +7,7 @@ resource "kubernetes_namespace" "paperless" {
 module "paperless" {
   source = "./paperless"
 
-  namespace = kubernetes_namespace.paperless.metadata[0].name
+  namespace     = kubernetes_namespace.paperless.metadata[0].name
+  paperless_url = "https://paperless.d-jensen.de"
 }
 

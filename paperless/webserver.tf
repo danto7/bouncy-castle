@@ -86,6 +86,16 @@ resource "kubernetes_deployment" "webserver" {
           }
 
           env {
+            name  = "PAPERLESS_URL"
+            value = var.paperless_url
+          }
+
+          env {
+            name  = "PAPERLESS_AUTO_LOGIN_USERNAME"
+            value = "daniel"
+          }
+
+          env {
             name  = "PAPERLESS_REDIS"
             value = "redis://$(BROKER_SERVICE_HOST):$(BROKER_SERVICE_PORT)"
           }

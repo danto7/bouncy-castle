@@ -42,8 +42,7 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
   }
 
   spec {
-    access_modes       = each.value.access_modes
-    storage_class_name = "longhorn"
+    access_modes = each.value.access_modes
 
     resources {
       requests = {
@@ -51,31 +50,31 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
       }
     }
 
-    volume_name = kubernetes_persistent_volume.pv[each.key].metadata.0.name
+    volume_name = "${var.namespace}-${each.key}"
   }
 }
 
-resource "kubernetes_persistent_volume" "pv" {
-  for_each = local.pvs
-
-  metadata {
-    name = "${var.namespace}-${each.key}"
-  }
-
-  spec {
-    access_modes       = each.value.access_modes
-    storage_class_name = "longhorn"
-
-    claim_ref {
-      name      = each.key
-      namespace = var.namespace
-    }
-
-    capacity = {
-      storage = each.value.storage
-    }
-
-    persistent_volume_source {
-    }
-  }
-}
+# resource "kubernetes_persistent_volume" "pv" {
+#   for_each = local.pvs
+# 
+#   metadata {
+#     name = "${var.namespace}-${each.key}"
+#   }
+# 
+#   spec {
+#     access_modes       = each.value.access_modes
+#     storage_class_name = "longhorn"
+# 
+#     claim_ref {
+#       name      = each.key
+#       namespace = var.namespace
+#     }
+# 
+#     capacity = {
+#       storage = each.value.storage
+#     }
+# 
+#     persistent_volume_source {
+#     }
+#   }
+# }

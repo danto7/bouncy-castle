@@ -2,6 +2,7 @@ locals {
   broker_labels = {
     name = "broker"
   }
+  broker_pvs = { for key, value in local.pvs : key => value if value.deployment == "broker" }
 }
 
 resource "kubernetes_service" "broker" {
@@ -39,11 +40,14 @@ resource "kubernetes_deployment" "broker" {
       }
 
       spec {
-        volume {
-          name = "redisdata"
+        dynamic "volume" {
+          for_each = local.broker_pvs
+          content {
+            name = volume.key
 
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.redisdata.metadata[0].name
+            persistent_volume_claim {
+              claim_name = kubernetes_persistent_volume_claim.pvc[volume.key].metadata[0].name
+            }
           }
         }
 
@@ -51,9 +55,12 @@ resource "kubernetes_deployment" "broker" {
           name  = local.broker_labels.name
           image = "docker.io/library/redis:7"
 
-          volume_mount {
-            name       = "redisdata"
-            mount_path = "/data"
+          dynamic "volume_mount" {
+            for_each = local.broker_pvs
+            content {
+              name       = volume_mount.key
+              mount_path = volume_mount.value.mount_path
+            }
           }
         }
 
@@ -63,23 +70,6 @@ resource "kubernetes_deployment" "broker" {
 
     strategy {
       type = "Recreate"
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "redisdata" {
-  metadata {
-    name      = "redisdata"
-    namespace = var.namespace
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "100Mi"
-      }
     }
   }
 }

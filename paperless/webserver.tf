@@ -2,6 +2,7 @@ locals {
   webserver_labels = {
     name = "webserver"
   }
+  webserver_pvs = { for key, value in local.pvs : key => value if value.deployment == "webserver" }
 }
 
 resource "kubernetes_service" "webserver" {
@@ -43,35 +44,14 @@ resource "kubernetes_deployment" "webserver" {
       }
 
       spec {
-        volume {
-          name = "data"
+        dynamic "volume" {
+          for_each = local.webserver_pvs
+          content {
+            name = volume.key
 
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.data.metadata[0].name
-          }
-        }
-
-        volume {
-          name = "media"
-
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.media.metadata[0].name
-          }
-        }
-
-        volume {
-          name = "export"
-
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.export.metadata[0].name
-          }
-        }
-
-        volume {
-          name = "consume"
-
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.consume.metadata[0].name
+            persistent_volume_claim {
+              claim_name = kubernetes_persistent_volume_claim.pvc[volume.key].metadata[0].name
+            }
           }
         }
 
@@ -120,24 +100,12 @@ resource "kubernetes_deployment" "webserver" {
             value = "daniel"
           }
 
-          volume_mount {
-            name       = "data"
-            mount_path = "/usr/src/paperless/data"
-          }
-
-          volume_mount {
-            name       = "media"
-            mount_path = "/usr/src/paperless/media"
-          }
-
-          volume_mount {
-            name       = "export"
-            mount_path = "/usr/src/paperless/export"
-          }
-
-          volume_mount {
-            name       = "consume"
-            mount_path = "/usr/src/paperless/consume"
+          dynamic "volume_mount" {
+            for_each = local.webserver_pvs
+            content {
+              name       = volume_mount.key
+              mount_path = volume_mount.value.mount_path
+            }
           }
 
           liveness_probe {
@@ -157,74 +125,6 @@ resource "kubernetes_deployment" "webserver" {
 
     strategy {
       type = "Recreate"
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "data" {
-  metadata {
-    name      = "data"
-    namespace = var.namespace
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "10Gi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "media" {
-  metadata {
-    name      = "media"
-    namespace = var.namespace
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "10Gi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "export" {
-  metadata {
-    name      = "export"
-    namespace = var.namespace
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "100Mi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "consume" {
-  metadata {
-    name      = "consume"
-    namespace = var.namespace
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "100Mi"
-      }
     }
   }
 }

@@ -42,13 +42,15 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
   }
 
   spec {
-    access_modes = each.value.access_modes
+    access_modes       = each.value.access_modes
+    storage_class_name = ""
 
     resources {
       requests = {
         storage = each.value.storage
       }
     }
+
     volume_name = kubernetes_persistent_volume.pv[each.key].metadata.0.name
   }
 }

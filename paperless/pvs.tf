@@ -76,7 +76,7 @@ resource "kubernetes_persistent_volume" "pv" {
       csi {
         driver        = "driver.longhorn.io"
         fs_type       = "ext4"
-        volume_handle = kubernetes_persistent_volume.pv[each.key].metadata.0.name
+        volume_handle = "${var.namespace}-${each.key}"
         volume_attributes = {
           dataLocality        = "best-effort"
           fsType              = "ext4"

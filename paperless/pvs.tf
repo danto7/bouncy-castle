@@ -43,7 +43,7 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
 
   spec {
     access_modes       = each.value.access_modes
-    storage_class_name = ""
+    storage_class_name = "longhorn"
 
     resources {
       requests = {
@@ -63,7 +63,8 @@ resource "kubernetes_persistent_volume" "pv" {
   }
 
   spec {
-    access_modes = each.value.access_modes
+    access_modes       = each.value.access_modes
+    storage_class_name = "longhorn"
 
     capacity = {
       storage = each.value.storage

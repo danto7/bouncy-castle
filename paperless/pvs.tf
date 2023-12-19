@@ -53,6 +53,8 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
 
     volume_name = kubernetes_persistent_volume.pv[each.key].metadata.0.name
   }
+
+  depends_on = [kubernetes_persistent_volume.pv]
 }
 
 resource "kubernetes_persistent_volume" "pv" {

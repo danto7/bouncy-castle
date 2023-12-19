@@ -53,8 +53,6 @@ resource "kubernetes_persistent_volume_claim" "pvc" {
 
     volume_name = kubernetes_persistent_volume.pv[each.key].metadata.0.name
   }
-
-  depends_on = [kubernetes_persistent_volume.pv]
 }
 
 resource "kubernetes_persistent_volume" "pv" {
@@ -67,6 +65,11 @@ resource "kubernetes_persistent_volume" "pv" {
   spec {
     access_modes       = each.value.access_modes
     storage_class_name = "longhorn"
+
+    claim_ref {
+      name      = each.key
+      namespace = var.namespace
+    }
 
     capacity = {
       storage = each.value.storage

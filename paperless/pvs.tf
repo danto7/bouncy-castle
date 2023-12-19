@@ -73,7 +73,14 @@ resource "kubernetes_persistent_volume" "pv" {
     persistent_volume_source {
       csi {
         driver        = "driver.longhorn.io"
-        volume_handle = each.key
+        fs_type       = "ext4"
+        volume_handle = "${var.namespace}-${each.key}"
+        volume_attributes = {
+          data_locality         = "best-effort"
+          fs_type               = "ext4"
+          number_of_replicas    = 2
+          stale_replica_timeout = 30
+        }
       }
     }
   }

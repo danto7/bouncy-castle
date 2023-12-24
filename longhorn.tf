@@ -22,7 +22,7 @@ resource "helm_release" "longhorn" {
     }
     persistence = {
       defaultDataLocality      = "best-effort"
-      defaultClassReplicaCount = 2
+      defaultClassReplicaCount = 1
       reclaimPolicy            = "Retain"
     }
     defaultSettings = {

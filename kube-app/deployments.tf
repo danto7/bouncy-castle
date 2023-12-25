@@ -112,6 +112,7 @@ resource "kubernetes_persistent_volume_claim" "app" {
         storage = each.value.size
       }
     }
+    volume_name = "${var.namespace}-${each.value.pvc_name}"
   }
 }
 

@@ -6,4 +6,4 @@ RUN adduser -D user
 COPY block.sh /entrypoint.sh
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

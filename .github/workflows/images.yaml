@@ -8,9 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Check out code
-      - name: Log in to registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & push Docker image
 
@@ -18,6 +15,6 @@ jobs:
           registry: ghcr.io
           image: blocking-alpine
           tags: latest
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          username: $
+          password: ${{ github.token }}
           directory: images/blocking-alpine

@@ -1,0 +1,13 @@
+steps:
+  - uses: actions/checkout@v3
+    name: Check out code
+
+  - uses: mr-smithers-excellent/docker-build-push@v6
+    name: Build & push Docker image
+    with:
+      image: ghcr.io/${{ github.actor }}/alpine-blocking
+      tags: latest
+      registry: ghcr.io
+      username: ${{ secrets.GHCR_USERNAME }}
+      password: ${{ secrets.GHCR_TOKEN }}
+      directory: images/alpine-blocking
